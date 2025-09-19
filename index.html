@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Will you be mine?</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#ff5370;
+      --muted:#9aa4b2;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;
+    }
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(ellipse at 20% 10%, rgba(255,83,112,0.06), transparent 5%), linear-gradient(180deg,#071029 0%, #081426 100%);
+      color:#e6eef6;
+      overflow-x:hidden;
+    }
+    .card{
+      width:min(760px,96%);
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 10px 40px rgba(2,6,23,0.6);
+      position:relative;
+      overflow:hidden;
+    }
+    header{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#7c5cff);display:flex;align-items:center;justify-content:center;font-size:28px}
+    h1{margin:0;font-size:22px}
+    p.lead{color:var(--muted);margin:6px 0 18px;font-size:15px}
+
+    .stage{display:grid;grid-template-columns:1fr 300px;gap:20px}
+    .left{padding:10px}
+    .heart{width:100%;height:200px;display:flex;align-items:center;justify-content:center}
+    .heart svg{width:180px;height:180px;filter:drop-shadow(0 8px 24px rgba(255,83,112,0.15))}
+
+    .controls{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px}
+    .btn{display:inline-block;padding:9px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600;font-size:14px}
+    .btn-primary{background:var(--accent);color:white;transition:0.2s}
+    .btn-primary:hover{opacity:0.9}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
+
+    .message-box{min-height:100px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:10px;border-radius:10px;font-size:15px;line-height:1.5;white-space:pre-line;overflow-wrap:break-word}
+
+    .right{display:flex;flex-direction:column;gap:10px}
+    .person{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:10px;border-radius:12px;text-align:center}
+    .person h3{margin:0;font-size:16px}
+    .person p{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    .proposal{display:flex;gap:8px;justify-content:center;margin-top:10px;position:relative;overflow:hidden}
+    .no-btn{background:#2b3646;color:#e6eef6;position:absolute;transition:transform 0.2s ease;left: -9999px;}
+
+    footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:center}
+
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:40;padding:10px}
+    .modal.show{display:flex}
+    .modal-card{background:linear-gradient(180deg,#061523,#071426);padding:20px;border-radius:14px;text-align:center;box-shadow:0 20px 60px rgba(2,6,23,0.8);max-width:90%;word-wrap:break-word}
+    .ring{font-size:36px;margin-bottom:10px}
+
+    /* confetti canvas */
+    #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+    /* responsive */
+    @media (max-width:760px){
+      .stage{grid-template-columns:1fr;gap:16px}
+      .heart{height:160px}
+      .heart svg{width:140px;height:140px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <header>
+      <div class="logo">❤</div>
+      <div>
+ <h1>💌 Just for You 💌</h1>
+<p class="lead">Guess what? What i expecting 😊</p>
+
+
+      </div>
+    </header>
+
+    <div class="stage">
+      <div class="left">
+        <div class="heart" aria-hidden="true">
+          <svg viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg">
+            <path fill="url(#g)" d="M23.6 0a7.4 7.4 0 0 0-5.6 2.6L16 4.6l-1.9-2A7.4 7.4 0 0 0 8.6 0 8.1 8.1 0 0 0 0 8.8c0 5.4 5.5 9.7 11.2 13.5 3.6 2.3 6.4 4.1 7.6 5.3.4.4 1 .4 1.4 0 1.1-1.2 4-3 7.6-5.3C26.5 18.5 32 14.2 32 8.8A8.1 8.1 0 0 0 23.6 0z"/>
+            <defs>
+              <linearGradient id="g" x1="0" x2="1">
+                <stop offset="0" stop-color="#ff6b8a"/>
+                <stop offset="1" stop-color="#ff3d6b"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="controls">
+          <div class="message-box" id="message">Hello! Click "Open Message" to begin.</div>
+
+          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <button class="btn btn-primary" id="openBtn">Open Message</button>
+            <!-- <button class="btn btn-ghost" id="editBtn">Edit Text</button> -->
+          </div>
+        </div>
+      </div>
+
+      <aside class="right">
+        <div class="person">
+          <h3 id="toName">[Their Name]</h3>
+          <p id="sub">You are amazing — and I have something to ask.</p>
+        </div>
+
+        <div class="person">
+          <p style="margin:0 0 8px">Do You Love Me?</p>
+          <div class="proposal">
+            <button class="btn btn-primary" id="yesBtn">Yes 💖</button>
+            <button class="btn no-btn" id="noBtn">Yes</button>
+          </div>
+        </div>
+
+        <div class="person" style="font-size:12px;color:var(--muted)">
+          <!-- <p style="margin:0">Tip: Open message first. Use "Edit Text" to personalize.</p> -->
+        </div>
+      </aside>
+    </div>
+
+    <footer>Made with ❤️ — Save and share this file locally.</footer>
+  </div>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="ring">💍</div>
+      <h2 id="finalTitle">Will you be mine?</h2>
+      <p id="finalText">Say yes and make me the happiest person alive.</p>
+      <div style="margin-top:16px"><button class="btn btn-primary" id="closeModal">Yes, I will 💖</button></div>
+    </div>
+  </div>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    const messageEl = document.getElementById('message');
+    const openBtn = document.getElementById('openBtn');
+    const editBtn = document.getElementById('editBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+    const toName = document.getElementById('toName');
+    const finalTitle = document.getElementById('finalTitle');
+    const finalText = document.getElementById('finalText');
+
+    let state = {
+      name: 'Special One',
+      lines: [
+        'I kept this for a long time in my heart.',
+        'Every moment with you feels like home.',
+        'I want us to code our story together — line by line, bug by bug, love by love.'
+      ]
+    };
+
+    function renderName(){ toName.textContent = state.name; }
+    renderName();
+
+    function typeMessage(lines, el, cb){
+      el.textContent = '';
+      let i = 0, j = 0;
+      function step(){
+        if(i >= lines.length){ if(cb) cb(); return; }
+        const line = lines[i];
+        if(j <= line.length){
+          el.textContent = lines.slice(0,i).join('\n') + (i>0? '\n' : '') + line.slice(0,j) + (j%2? '▌' : '');
+          j++; setTimeout(step, 35);
+        } else { j=0; i++; setTimeout(step, 350); }
+      }
+      step();
+    }
+
+    openBtn.addEventListener('click', ()=>{
+      finalTitle.textContent = `Will you be mine, ${state.name}?`;
+      finalText.textContent = `Let’s code life together — pair programming forever. Say yes?`;
+      typeMessage(state.lines, messageEl);
+    });
+
+    editBtn.addEventListener('click', ()=>{
+      const name = prompt('Name to display', state.name) || state.name;
+      const a = prompt('Line 1', state.lines[0]) || state.lines[0];
+      const b = prompt('Line 2', state.lines[1]) || state.lines[1];
+      const c = prompt('Line 3', state.lines[2]) || state.lines[2];
+      state.name = name; state.lines = [a,b,c]; renderName();
+      messageEl.textContent = 'Text updated — click Open Message to view.';
+    });
+
+    function moveNoBtn(){
+      const parent = noBtn.parentElement;
+      const w = parent.offsetWidth - noBtn.offsetWidth - 8;
+      const h = parent.offsetHeight - noBtn.offsetHeight - 8;
+      const x = Math.floor(Math.random()*w);
+      const y = Math.floor(Math.random()*h);
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    noBtn.addEventListener('mouseenter', moveNoBtn);
+    noBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); moveNoBtn(); });
+
+    // yesBtn.addEventListener('click', ()=>{
+    //   modal.classList.add('show');
+    //   launchConfetti();
+    // });
+    // closeModal.addEventListener('click', ()=>{ modal.classList.remove('show'); stopConfetti(); });
+
+
+yesBtn.addEventListener('click', ()=>{
+      modal.classList.add('show');
+      launchConfetti();
+
+      // --- Formspree integration ---
+      // Replace with your actual Formspree endpoint, e.g. https://formspree.io/f/mabcd123
+      fetch("https://formspree.io/f/your", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: "She clicked YES on your proposal site! ❤️",
+          time: new Date().toISOString()
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Her YES was sent to you successfully via Formspree! 🎉");
+        } else {
+          alert("Message failed to send. Please try again.");
+        }
+      })
+      .catch(error => alert("Error: " + error));
+    });
+
+    closeModal.addEventListener('click', ()=>{ 
+      modal.classList.remove('show'); 
+      stopConfetti(); 
+    });
+
+
+    //---------------
+
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confetti = [];
+    let animId = null;
+
+    function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+    addEventListener('resize', resize); resize();
+
+    function rand(min,max){ return Math.random()*(max-min)+min; }
+
+    function spawnConfetti(n=80){
+      confetti = Array.from({length:n},()=>({
+        x: rand(0,canvas.width),
+        y: rand(-canvas.height,0),
+        s: rand(6,14),
+        r: rand(0,360),
+        g: rand(2,5),
+        vx: rand(-1.5,1.5),
+        vy: rand(2,6),
+        color: `hsl(${Math.floor(rand(0,360))}, 80%, 60%)`
+      }));
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(const p of confetti){
+        ctx.fillStyle = p.color;
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.r*Math.PI/180);
+        ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.6);
+        ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.r += p.g;
+        if(p.y > canvas.height + 50){ p.y = rand(-canvas.height,0); p.x = rand(0,canvas.width); }
+      }
+      animId = requestAnimationFrame(draw);
+    }
+
+    function launchConfetti(){ spawnConfetti(120); if(!animId) draw(); }
+    function stopConfetti(){ if(animId) cancelAnimationFrame(animId); animId=null; confetti=[]; ctx.clearRect(0,0,canvas.width,canvas.height); }
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter') yesBtn.click();
+      if(e.key === 'Escape'){ modal.classList.remove('show'); stopConfetti(); }
+    });
+  </script>
+</body>
+</html>
